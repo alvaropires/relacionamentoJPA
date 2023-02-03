@@ -2,7 +2,6 @@ package com.exemple.controller;
 
 import com.exemple.dto.ProductCreateDTO;
 import com.exemple.dto.ProductDTO;
-import com.exemple.model.Product;
 import com.exemple.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

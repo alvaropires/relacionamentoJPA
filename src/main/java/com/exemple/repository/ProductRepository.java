@@ -1,6 +1,5 @@
 package com.exemple.repository;
 
-import com.exemple.model.Category;
 import com.exemple.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
