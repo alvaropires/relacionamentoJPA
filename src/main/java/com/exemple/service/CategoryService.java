@@ -1,7 +1,7 @@
 package com.exemple.service;
 
-import com.exemple.dto.CategoryCreateDTO;
-import com.exemple.dto.CategoryDTO;
+import com.exemple.dto.request.CategoryRequest;
+import com.exemple.dto.response.CategoryResponse;
 import com.exemple.model.Category;
 import com.exemple.repository.CategoryRepository;
 import org.modelmapper.ModelMapper;
@@ -23,9 +23,9 @@ public class CategoryService {
         this.modelMapper = modelMapper;
     }
 
-    public CategoryDTO create(Category category){
+    public CategoryResponse create(Category category){
         categoryRepository.save(category);
-        return this.toCategoryDTO(category);
+        return this.toCategoryResponse(category);
     }
     public List<Category> findAll(){
         return categoryRepository.findAll();
@@ -33,15 +33,15 @@ public class CategoryService {
     public Optional<Category> findById(Long id){
         return categoryRepository.findById(id);
     }
-    public CategoryDTO toCategoryDTO(Category category){
-        return modelMapper.map(category, CategoryDTO.class);
+    public CategoryResponse toCategoryResponse(Category category){
+        return modelMapper.map(category, CategoryResponse.class);
     }
 
-    public List<CategoryDTO> toCategoryDTOList(List<Category> categories){
-        return categories.stream().map(this::toCategoryDTO).collect(Collectors.toList());
+    public List<CategoryResponse> toCategoryResponseList(List<Category> categories){
+        return categories.stream().map(this::toCategoryResponse).collect(Collectors.toList());
     }
-    public Category toCategory(CategoryCreateDTO dto){
-        Category category = modelMapper.map(dto, Category.class);
+    public Category toCategory(CategoryRequest categoryRequest){
+        Category category = modelMapper.map(categoryRequest, Category.class);
         category.setProducts(new ArrayList<>());
         return category;
     }

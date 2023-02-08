@@ -1,9 +1,9 @@
-package com.exemple.dto;
+package com.exemple.dto.request;
 
 import lombok.Data;
 
 @Data
-public class ProductCreateDTO {
+public class ProductRequest {
     private String name;
     private Long category;
     private Double price;

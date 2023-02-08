@@ -1,10 +1,10 @@
-package com.exemple.dto;
+package com.exemple.dto.response;
 
 import com.exemple.model.Category;
 import lombok.Data;
 
 @Data
-public class ProductDTO {
+public class ProductResponse {
     private String name;
     private Category category;
     private Double price;

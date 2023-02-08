@@ -1,7 +1,7 @@
 package com.exemple.service;
 
-import com.exemple.dto.ProductCreateDTO;
-import com.exemple.dto.ProductDTO;
+import com.exemple.dto.request.ProductRequest;
+import com.exemple.dto.response.ProductResponse;
 import com.exemple.model.Category;
 import com.exemple.model.Product;
 import com.exemple.repository.CategoryRepository;
@@ -31,25 +31,21 @@ public class ProductService {
     public List<Product> findAll(){
         return productRepository.findAll();
     }
-    public ProductDTO create(Product product){
-        System.out.println(product.getCategory().getId());
-        Category category = categoryRepository.findById(product.getCategory().getId()).orElseThrow(()-> new IllegalArgumentException("category not found"));
-        System.out.println(category);
-        product.setCategory(category);
+    public ProductResponse create(Product product){
         productRepository.save(product);
-        return this.toProductDTO(product);
+        return this.toProductResponse(product);
     }
 
-    public ProductDTO toProductDTO(Product product){
-        return modelMapper.map(product, ProductDTO.class);
+    public ProductResponse toProductResponse(Product product){
+        return modelMapper.map(product, ProductResponse.class);
     }
 
-    public List<ProductDTO> toProductDTOList(List<Product> products){
-        return products.stream().map(this::toProductDTO).collect(Collectors.toList());
+    public List<ProductResponse> toProductResponseList(List<Product> products){
+        return products.stream().map(this::toProductResponse).collect(Collectors.toList());
     }
-    public Product toProduct(ProductCreateDTO dto){
-        Category category = categoryRepository.findById(dto.getCategory()).orElseThrow();
-        Product product = modelMapper.map(dto, Product.class);
+    public Product toProduct(ProductRequest productRequest){
+        Category category = categoryRepository.findById(productRequest.getCategory()).orElseThrow();
+        Product product = modelMapper.map(productRequest, Product.class);
         product.setCategory(category);
         return product;
     }

@@ -1,7 +1,7 @@
 package com.exemple.controller;
 
-import com.exemple.dto.ProductCreateDTO;
-import com.exemple.dto.ProductDTO;
+import com.exemple.dto.request.ProductRequest;
+import com.exemple.dto.response.ProductResponse;
 import com.exemple.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,25 +22,25 @@ public class ProductController {
 
     @GetMapping
     @Operation(description = "Find All Products.")
-    public ResponseEntity<List<ProductDTO>> findAll(){
+    public ResponseEntity<List<ProductResponse>> findAll(){
         var products = productService.findAll();
-        List<ProductDTO> productListDTO = productService.toProductDTOList(products);
-        return new ResponseEntity<>(productListDTO, HttpStatus.OK);
+        List<ProductResponse> productResponseList = productService.toProductResponseList(products);
+        return new ResponseEntity<>(productResponseList, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @Operation(description = "Find Products By Id.")
-    public ResponseEntity<Optional<ProductDTO>> findById(@PathVariable Long id){
+    public ResponseEntity<Optional<ProductResponse>> findById(@PathVariable Long id){
         var product = productService.findById(id);
-        ProductDTO productDTO = productService.toProductDTO(product.orElseThrow());
-        return new ResponseEntity<>(Optional.ofNullable(productDTO), HttpStatus.OK);
+        ProductResponse productResponse = productService.toProductResponse(product.orElseThrow());
+        return new ResponseEntity<>(Optional.ofNullable(productResponse), HttpStatus.OK);
     }
     @PostMapping()
     @Operation(description = "Create A New Product.")
-    public ResponseEntity<ProductDTO> create(@RequestBody ProductCreateDTO dto){
-        var product = productService.toProduct(dto);
+    public ResponseEntity<ProductResponse> create(@RequestBody ProductRequest productRequest){
+        var product = productService.toProduct(productRequest);
         productService.create(product);
-        var result = productService.toProductDTO(product);
+        var result = productService.toProductResponse(product);
         return new ResponseEntity(result, HttpStatus.OK);
     }
 
