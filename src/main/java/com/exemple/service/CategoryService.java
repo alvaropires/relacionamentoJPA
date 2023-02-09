@@ -30,8 +30,20 @@ public class CategoryService {
     public List<Category> findAll(){
         return categoryRepository.findAll();
     }
-    public Optional<Category> findById(Long id){
-        return categoryRepository.findById(id);
+    public Category findById(Long id){
+        return categoryRepository.findById(id).orElseThrow();
+    }
+
+    public void deleteById(Long id) {
+        findById(id);
+        categoryRepository.deleteById(id);
+    }
+
+    public Category update(Long id, CategoryRequest categoryRequest){
+        Category category = findById(id);
+        category.setName(categoryRequest.getName());
+        categoryRepository.save(category);
+        return category;
     }
     public CategoryResponse toCategoryResponse(Category category){
         return modelMapper.map(category, CategoryResponse.class);
@@ -45,4 +57,5 @@ public class CategoryService {
         category.setProducts(new ArrayList<>());
         return category;
     }
+
 }

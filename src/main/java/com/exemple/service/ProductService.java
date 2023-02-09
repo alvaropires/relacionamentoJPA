@@ -25,8 +25,8 @@ public class ProductService {
         this.categoryRepository = categoryRepository;
         this.modelMapper = modelMapper;
     }
-    public Optional<Product> findById(Long id){
-        return productRepository.findById(id);
+    public Product findById(Long id){
+        return productRepository.findById(id).orElseThrow();
     }
     public List<Product> findAll(){
         return productRepository.findAll();
@@ -34,6 +34,22 @@ public class ProductService {
     public ProductResponse create(Product product){
         productRepository.save(product);
         return this.toProductResponse(product);
+    }
+
+    public Product update(Long id, ProductRequest productRequest){
+        Product product = findById(id);
+        Category category = categoryRepository.findById(productRequest.getCategory()).orElseThrow();
+        product.setName(productRequest.getName());
+        product.setCategory(category);
+        product.setPrice(productRequest.getPrice());
+        product.setIsActive(productRequest.getIsActive());
+        productRepository.save(product);
+        return product;
+    }
+
+    public void delete(Long id){
+        findById(id);
+        productRepository.deleteById(id);
     }
 
     public ProductResponse toProductResponse(Product product){

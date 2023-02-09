@@ -26,13 +26,11 @@ public class CategoryController {
         List<CategoryResponse> result = categoryService.toCategoryResponseList(categories);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
-
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<CategoryResponse>> findById(@PathVariable Long id){
+    public ResponseEntity<CategoryResponse> findById(@PathVariable Long id){
         var category = categoryService.findById(id);
-        CategoryResponse categoryResponse = categoryService.toCategoryResponse(category.orElseThrow());
-        return new ResponseEntity<>(Optional.of(categoryResponse), HttpStatus.OK);
+        CategoryResponse categoryResponse = categoryService.toCategoryResponse(category);
+        return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
     }
 
     @PostMapping
@@ -40,5 +38,18 @@ public class CategoryController {
         Category category = categoryService.toCategory(categoryRequest);
         var create = categoryService.create(category);
         return new ResponseEntity<>(create, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteById(@PathVariable Long id){
+        categoryService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryResponse> updateById(@PathVariable Long id, @RequestBody CategoryRequest categoryRequest){
+        Category category = categoryService.update(id, categoryRequest);
+        CategoryResponse categoryResponse = categoryService.toCategoryResponse(category);
+        return new ResponseEntity<>(categoryResponse, HttpStatus.CREATED);
     }
 }

@@ -2,6 +2,7 @@ package com.exemple.controller;
 
 import com.exemple.dto.request.ProductRequest;
 import com.exemple.dto.response.ProductResponse;
+import com.exemple.model.Product;
 import com.exemple.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,10 +31,10 @@ public class ProductController {
 
     @GetMapping("/{id}")
     @Operation(description = "Find Products By Id.")
-    public ResponseEntity<Optional<ProductResponse>> findById(@PathVariable Long id){
+    public ResponseEntity<ProductResponse> findById(@PathVariable Long id){
         var product = productService.findById(id);
-        ProductResponse productResponse = productService.toProductResponse(product.orElseThrow());
-        return new ResponseEntity<>(Optional.ofNullable(productResponse), HttpStatus.OK);
+        ProductResponse productResponse = productService.toProductResponse(product);
+        return new ResponseEntity<>(productResponse, HttpStatus.OK);
     }
     @PostMapping()
     @Operation(description = "Create A New Product.")
@@ -42,6 +43,21 @@ public class ProductController {
         productService.create(product);
         var result = productService.toProductResponse(product);
         return new ResponseEntity(result, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(description = "Delete A Product By ID.")
+    public ResponseEntity delete(@PathVariable Long id){
+        productService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    @Operation(description = "Update A Product By ID")
+    public ResponseEntity<ProductResponse> update(@PathVariable Long id, @RequestBody ProductRequest productRequest){
+        Product product = productService.update(id, productRequest);
+        ProductResponse productResponse = productService.toProductResponse(product);
+        return new ResponseEntity<>(productResponse, HttpStatus.OK);
     }
 
 }
