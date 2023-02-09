@@ -17,7 +17,7 @@ public class Product {
     @Getter @Setter private String name;
     @Getter @Setter private Double price;
     @Getter @Setter
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "category_id")
     private Category category;

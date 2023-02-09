@@ -4,6 +4,7 @@ import com.exemple.dto.request.CategoryRequest;
 import com.exemple.dto.response.CategoryResponse;
 import com.exemple.model.Category;
 import com.exemple.service.CategoryService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,12 +22,14 @@ public class CategoryController {
     public CategoryService categoryService;
 
     @GetMapping
+    @Operation(description = "Find All Categories.")
     public ResponseEntity<List<CategoryResponse>> findAll(){
         var categories = categoryService.findAll();
         List<CategoryResponse> result = categoryService.toCategoryResponseList(categories);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     @GetMapping("/{id}")
+    @Operation(description = "Find Categories By Id.")
     public ResponseEntity<CategoryResponse> findById(@PathVariable Long id){
         var category = categoryService.findById(id);
         CategoryResponse categoryResponse = categoryService.toCategoryResponse(category);
@@ -34,6 +37,7 @@ public class CategoryController {
     }
 
     @PostMapping
+    @Operation(description = "Create A New Category.")
     public ResponseEntity<CategoryResponse> create(@RequestBody CategoryRequest categoryRequest){
         Category category = categoryService.toCategory(categoryRequest);
         var create = categoryService.create(category);
@@ -41,12 +45,14 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(description = "Delete A Category By ID.")
     public ResponseEntity deleteById(@PathVariable Long id){
         categoryService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
+    @Operation(description = "Update A Category By ID")
     public ResponseEntity<CategoryResponse> updateById(@PathVariable Long id, @RequestBody CategoryRequest categoryRequest){
         Category category = categoryService.update(id, categoryRequest);
         CategoryResponse categoryResponse = categoryService.toCategoryResponse(category);

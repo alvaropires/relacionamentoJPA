@@ -2,6 +2,7 @@ package com.exemple.service;
 
 import com.exemple.dto.request.CategoryRequest;
 import com.exemple.dto.response.CategoryResponse;
+import com.exemple.exceptions.CategoryNotFoundException;
 import com.exemple.model.Category;
 import com.exemple.repository.CategoryRepository;
 import org.modelmapper.ModelMapper;
@@ -31,7 +32,7 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
     public Category findById(Long id){
-        return categoryRepository.findById(id).orElseThrow();
+        return categoryRepository.findById(id).orElseThrow(()->new CategoryNotFoundException(id));
     }
 
     public void deleteById(Long id) {
