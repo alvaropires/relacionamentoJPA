@@ -2,6 +2,8 @@ package com.exemple.service;
 
 import com.exemple.dto.request.ProductRequest;
 import com.exemple.dto.response.ProductResponse;
+import com.exemple.exceptions.CategoryNotFoundException;
+import com.exemple.exceptions.ProductNotFoundException;
 import com.exemple.model.Category;
 import com.exemple.model.Product;
 import com.exemple.repository.CategoryRepository;
@@ -25,8 +27,8 @@ public class ProductService {
         this.categoryRepository = categoryRepository;
         this.modelMapper = modelMapper;
     }
-    public Optional<Product> findById(Long id){
-        return productRepository.findById(id);
+    public Product findById(Long id){
+        return productRepository.findById(id).orElseThrow(()->new ProductNotFoundException(id));
     }
     public List<Product> findAll(){
         return productRepository.findAll();
@@ -34,6 +36,23 @@ public class ProductService {
     public ProductResponse create(Product product){
         productRepository.save(product);
         return this.toProductResponse(product);
+    }
+
+    public Product update(Long id, ProductRequest productRequest){
+        Product product = findById(id);
+        Category category = categoryRepository.findById(productRequest.getCategory()).orElseThrow(()->new CategoryNotFoundException(id));
+        product.setName(productRequest.getName());
+        product.setCategory(category);
+        product.setPrice(productRequest.getPrice());
+        product.setIsActive(productRequest.getIsActive());
+        productRepository.save(product);
+        return product;
+    }
+
+    public void delete(Long id){
+        findById(id);
+
+        productRepository.deleteById(id);
     }
 
     public ProductResponse toProductResponse(Product product){
@@ -44,7 +63,7 @@ public class ProductService {
         return products.stream().map(this::toProductResponse).collect(Collectors.toList());
     }
     public Product toProduct(ProductRequest productRequest){
-        Category category = categoryRepository.findById(productRequest.getCategory()).orElseThrow();
+        Category category = categoryRepository.findById(productRequest.getCategory()).orElseThrow(()->new CategoryNotFoundException(productRequest.getCategory()));
         Product product = modelMapper.map(productRequest, Product.class);
         product.setCategory(category);
         return product;
